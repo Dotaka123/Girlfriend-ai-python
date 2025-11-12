@@ -12,7 +12,7 @@ app = Flask(__name__)
 # Ces variables doivent être définies dans votre environnement (ex: .env file ou plateforme d'hébergement)
 ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
 VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN")
-KAIZ_API_KEY = os.environ.get("KAIZ_API_KEY")
+# KAIZ_API_KEY a été supprimé car la nouvelle API ne semble pas en avoir besoin.
 
 # API LLM (Mise à jour vers la nouvelle API)
 KAIZ_API_URL = "https://rest-api-o42n.onrender.com/api/chatgpt5"
@@ -113,7 +113,7 @@ def handle_message():
 def get_llama_response(prompt_text, history, sender_id, image_url=None):
     """
     Appelle l'API LLM avec le prompt de personnalité, l'historique et potentiellement une URL d'image.
-    Adapté pour la nouvelle API.
+    Adapté pour la nouvelle API et sans KAIZ_API_KEY.
     """
     formatted_history = "\n".join(history)
     
@@ -126,7 +126,7 @@ def get_llama_response(prompt_text, history, sender_id, image_url=None):
         "uid": sender_id,
         "model": "gpt-5", # Modèle fixé à gpt-5
         "system": system_prompt,
-        "apikey": KAIZ_API_KEY
+        # 'apikey' a été supprimé ici
     }
     
     # Si une image est fournie, l'ajouter aux paramètres
@@ -180,8 +180,8 @@ def send_message(recipient_id, message_content):
 
 if __name__ == '__main__':
     # Vérification des variables d'environnement critiques au démarrage
-    if not all([ACCESS_TOKEN, VERIFY_TOKEN, KAIZ_API_KEY]):
-        logging.critical("CRITICAL: Les variables d'environnement (ACCESS_TOKEN, VERIFY_TOKEN, KAIZ_API_KEY) ne sont pas toutes définies.")
+    if not all([ACCESS_TOKEN, VERIFY_TOKEN]):
+        logging.critical("CRITICAL: Les variables d'environnement (ACCESS_TOKEN, VERIFY_TOKEN) ne sont pas toutes définies.")
         # Ne pas exécuter l'application si la configuration est incomplète
         exit(1)
         
